@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "repro=update_git"
+                "addfiles=."
+                "commit&push"
+                "init"
+                "commit_msg=commit per script"               
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}

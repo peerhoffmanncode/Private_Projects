@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import sys
+import os
 import KI
 import UI
 
@@ -86,6 +87,13 @@ def game(gamestoplay = 1, symbol_to_use1 = "X", is_cpu_player_1 = 0, symbol_to_u
     # Game loop
     Run = True
     while Run:
+        
+        '''check the OS and clear the terminal screen'''
+        if sys.platform == "linux" or sys.platform == "linux2" or sys.platform == "darwin":
+            os.system('clear')
+        elif platform == "win32":
+            os.system('cls')
+            
         allgames -= 1
         if allgames < 1:
             Run = False
@@ -110,14 +118,6 @@ def game(gamestoplay = 1, symbol_to_use1 = "X", is_cpu_player_1 = 0, symbol_to_u
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     Run = False
-
-            # while True:
-            #     event = pygame.event.wait()
-            #     if event.type == pygame.QUIT:
-            #         pygame.quit()
-            #         sys.exit()
-            #     elif event.type == KEYDOWN:
-            #         break
 
             # Player or CPU makes a turn
             make_turn(spieler_nummer, is_cpu_player, spieler_symbol, gegner_symbol, tictactoe_gamestate)
@@ -185,8 +185,8 @@ if __name__ == '__main__':
 
     keep_playing = True
     while keep_playing:
-
-        game(100, "X", 0, "O", 1)
+            
+        game(3, "X", 0, "O", 1)
 
         UI.draw_string(TicTacToe_Game_Window, "Nochmal Spielen? >Klick hier!<", 110, 450, 20)
         playagain = False

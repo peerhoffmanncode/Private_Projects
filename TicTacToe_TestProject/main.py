@@ -36,7 +36,7 @@ def check_valid_move(player_move, player_symbol, gamestate):
 
 
 def make_turn(player, is_it_a_cpu_player, player_symbol, the_gegner_symbol, gamestate):
-    print (player, player_symbol)
+    #print (player, player_symbol)
     valide_move_done = False
     grid = [(100, 50), (200, 50), (300, 50), (100, 150), (200, 150), (300, 150), (100, 250), (200, 250), (300, 250)]
     mouse_x_pos, mouse_y_pos = 0, 0
@@ -111,13 +111,13 @@ def game(gamestoplay = 1, symbol_to_use1 = "X", is_cpu_player_1 = 0, symbol_to_u
                 if event.type == pygame.QUIT:
                     Run = False
 
-            while True:
-                event = pygame.event.wait()
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == KEYDOWN:
-                    break
+            # while True:
+            #     event = pygame.event.wait()
+            #     if event.type == pygame.QUIT:
+            #         pygame.quit()
+            #         sys.exit()
+            #     elif event.type == KEYDOWN:
+            #         break
 
             # Player or CPU makes a turn
             make_turn(spieler_nummer, is_cpu_player, spieler_symbol, gegner_symbol, tictactoe_gamestate)
@@ -186,7 +186,7 @@ if __name__ == '__main__':
     keep_playing = True
     while keep_playing:
 
-        game(100, "X", 1, "O", 1)
+        game(100, "X", 0, "O", 1)
 
         UI.draw_string(TicTacToe_Game_Window, "Nochmal Spielen? >Klick hier!<", 110, 450, 20)
         playagain = False

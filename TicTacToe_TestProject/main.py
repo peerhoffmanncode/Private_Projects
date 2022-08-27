@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import *
+#from pygame.locals import *
 import sys
 import os
 import KI
@@ -158,11 +158,8 @@ def game(gamestoplay = 1, symbol_to_use1 = "X", is_cpu_player_1 = 0, symbol_to_u
             UI.draw_string(TicTacToe_Game_Window, "Unentschieden! Kein Spieler hat gewonnen ;-)", 50, 400, 20)
             games_tie += 1
             pygame.time.wait(1500)
-        else:
-            pass
 
-
-
+    # Final State of game!
     UI.draw_game(TicTacToe_Game_Window, tictactoe_gamestate, -1, symbol_to_use1)
     UI.draw_final_stats(TicTacToe_Game_Window, abs(allgames - gamestoplay),
                         games_won_player1, games_won_player2, games_tie)
@@ -176,7 +173,7 @@ if __name__ == '__main__':
     # Interface
     WIDTH = 500
     HIGH = 500
-    FPS = 60
+    FPS = 10
 
     # init Window
     TicTacToe_Game_Window = pygame.display.set_mode((WIDTH, HIGH))

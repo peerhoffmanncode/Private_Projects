@@ -148,13 +148,13 @@ def find_best_choise(player_symbol, opponent_symbol, gamestate):
     # Somehow Opp win possible? Needed to be blocked is second interest
     for i in range(von, bis, random_value):
         if can_make_three(i, opponent_symbol, gamestate):
-            print("opp win with: " + str(i + 1))
+            print("opp win with: " + str(i + 1) + " so CPU plays this field!")
             return i + 1
 
     # Can make 2 in row?
     for i in range(von, bis, random_value):
         if can_make_two(i, player_symbol, gamestate):
-            print("cpu makes two with: " + str(i + 1))
+            print("cpu makes two with: " + str(i + 1) + " so CPU plays this field!")
             return i + 1
 
     # decide if CPU wants to use center cell (5)

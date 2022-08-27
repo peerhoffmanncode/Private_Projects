@@ -1,4 +1,5 @@
 import pygame
+import time
 
 
 def draw_ruls():
@@ -43,8 +44,10 @@ def draw_game(WINDOW, gamestate, player, symbol):
         if x > 250:
             x = 0
             y += 100
-
+            
+    print("GameBoard DisplyUpdate !")
     pygame.display.update()
+    time.sleep(0.1)
 
 
 def draw_ask_for_input(WINDOW, message):

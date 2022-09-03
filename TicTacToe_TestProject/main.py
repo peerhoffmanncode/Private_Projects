@@ -1,5 +1,4 @@
 import pygame
-#from pygame.locals import *
 import sys
 import os
 import KI
@@ -13,15 +12,19 @@ def quit_game():
 
 def input_move(player):
     while True:
-        player_input = UI.draw_ask_for_input(TicTacToe_Game_Window, "Spieler " + str(player) + "bitte geben Sie Ihren "
-                                                                                               "Zug ein: ")
+        player_input = UI.draw_ask_for_input(
+            TicTacToe_Game_Window,
+            "Spieler " + str(player) + "bitte geben Sie Ihren " "Zug ein: ",
+        )
         try:
             player_input = int(player_input)
             if 1 <= player_input <= 9:
                 return player_input
         except ValueError:
             pass
-        UI.draw_string(TicTacToe_Game_Window, "Bitte nur die Zahlen 1 - 9 eingeben.", 50, 400, 20)
+        UI.draw_string(
+            TicTacToe_Game_Window, "Bitte nur die Zahlen 1 - 9 eingeben.", 50, 400, 20
+        )
 
 
 def check_valid_move(player_move, player_symbol, gamestate):
@@ -32,14 +35,30 @@ def check_valid_move(player_move, player_symbol, gamestate):
         gamestate[player_move - 1] = player_symbol
         return True
     else:
-        UI.draw_string(TicTacToe_Game_Window, "ungültiger Zug! Bitte nochmal eingeben.", 50, 400, 20)
+        UI.draw_string(
+            TicTacToe_Game_Window,
+            "ungültiger Zug! Bitte nochmal eingeben.",
+            50,
+            400,
+            20,
+        )
         return False
 
 
 def make_turn(player, is_it_a_cpu_player, player_symbol, the_gegner_symbol, gamestate):
-    #print (player, player_symbol)
+    # print (player, player_symbol)
     valide_move_done = False
-    grid = [(100, 50), (200, 50), (300, 50), (100, 150), (200, 150), (300, 150), (100, 250), (200, 250), (300, 250)]
+    grid = [
+        (100, 50),
+        (200, 50),
+        (300, 50),
+        (100, 150),
+        (200, 150),
+        (300, 150),
+        (100, 250),
+        (200, 250),
+        (300, 250),
+    ]
     mouse_x_pos, mouse_y_pos = 0, 0
 
     if is_it_a_cpu_player == 0:
@@ -65,7 +84,9 @@ def make_turn(player, is_it_a_cpu_player, player_symbol, the_gegner_symbol, game
 
     else:
         while not valide_move_done:
-            playerturn = KI.find_best_choise(player_symbol, the_gegner_symbol, gamestate)
+            playerturn = KI.find_best_choise(
+                player_symbol, the_gegner_symbol, gamestate
+            )
             if playerturn == -1:
                 break
             valide_move_done = check_valid_move(playerturn, player_symbol, gamestate)
@@ -77,7 +98,14 @@ def check_board_full(gamestate):
             return False
     return True
 
-def game(gamestoplay = 1, symbol_to_use1 = "X", is_cpu_player_1 = 0, symbol_to_use2 = "O", is_cpu_player_2 = 1):
+
+def game(
+    gamestoplay=1,
+    symbol_to_use1="X",
+    is_cpu_player_1=0,
+    symbol_to_use2="O",
+    is_cpu_player_2=1,
+):
     games_won_player1 = 0
     games_won_player2 = 0
     games_tie = 0
@@ -87,13 +115,17 @@ def game(gamestoplay = 1, symbol_to_use1 = "X", is_cpu_player_1 = 0, symbol_to_u
     # Game loop
     Run = True
     while Run:
-        
-        '''check the OS and clear the terminal screen'''
-        if sys.platform == "linux" or sys.platform == "linux2" or sys.platform == "darwin":
-            os.system('clear')
+
+        """check the OS and clear the terminal screen"""
+        if (
+            sys.platform == "linux"
+            or sys.platform == "linux2"
+            or sys.platform == "darwin"
+        ):
+            os.system("clear")
         elif platform == "win32":
-            os.system('cls')
-            
+            os.system("cls")
+
         allgames -= 1
         if allgames < 1:
             Run = False
@@ -108,8 +140,9 @@ def game(gamestoplay = 1, symbol_to_use1 = "X", is_cpu_player_1 = 0, symbol_to_u
         game_done = False
         board_full = False
 
-
-        UI.draw_game(TicTacToe_Game_Window, tictactoe_gamestate, spieler_nummer, symbol_to_use1)
+        UI.draw_game(
+            TicTacToe_Game_Window, tictactoe_gamestate, spieler_nummer, symbol_to_use1
+        )
 
         pygame.event.clear()
         while game_done is not True and board_full is not True:
@@ -120,7 +153,13 @@ def game(gamestoplay = 1, symbol_to_use1 = "X", is_cpu_player_1 = 0, symbol_to_u
                     Run = False
 
             # Player or CPU makes a turn
-            make_turn(spieler_nummer, is_cpu_player, spieler_symbol, gegner_symbol, tictactoe_gamestate)
+            make_turn(
+                spieler_nummer,
+                is_cpu_player,
+                spieler_symbol,
+                gegner_symbol,
+                tictactoe_gamestate,
+            )
 
             # Check game states
             game_done = KI.check_win(spieler_symbol, tictactoe_gamestate)
@@ -141,31 +180,52 @@ def game(gamestoplay = 1, symbol_to_use1 = "X", is_cpu_player_1 = 0, symbol_to_u
                     is_cpu_player = is_cpu_player_1
 
             # DRAW GAME
-            UI.draw_game(TicTacToe_Game_Window, tictactoe_gamestate, spieler_nummer, symbol_to_use1)
+            UI.draw_game(
+                TicTacToe_Game_Window,
+                tictactoe_gamestate,
+                spieler_nummer,
+                symbol_to_use1,
+            )
 
             # FPS
             clock.tick(FPS)
 
         if game_done is True:
-            UI.draw_string(TicTacToe_Game_Window, "Spieler " + str(spieler_nummer) + " hat Gewonnen! :-) yeeeay!!!",
-                           50, 400, 20)
+            UI.draw_string(
+                TicTacToe_Game_Window,
+                "Spieler " + str(spieler_nummer) + " hat Gewonnen! :-) yeeeay!!!",
+                50,
+                400,
+                20,
+            )
             pygame.time.wait(1500)
             if spieler_nummer == 1:
                 games_won_player1 += 1
             else:
                 games_won_player2 += 1
         elif board_full is True:
-            UI.draw_string(TicTacToe_Game_Window, "Unentschieden! Kein Spieler hat gewonnen ;-)", 50, 400, 20)
+            UI.draw_string(
+                TicTacToe_Game_Window,
+                "Unentschieden! Kein Spieler hat gewonnen ;-)",
+                50,
+                400,
+                20,
+            )
             games_tie += 1
             pygame.time.wait(1500)
 
     # Final State of game!
     UI.draw_game(TicTacToe_Game_Window, tictactoe_gamestate, -1, symbol_to_use1)
-    UI.draw_final_stats(TicTacToe_Game_Window, abs(allgames - gamestoplay),
-                        games_won_player1, games_won_player2, games_tie)
+    UI.draw_final_stats(
+        TicTacToe_Game_Window,
+        abs(allgames - gamestoplay),
+        games_won_player1,
+        games_won_player2,
+        games_tie,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Init pygame
     pygame.init()
     pygame.font.init()
@@ -182,10 +242,12 @@ if __name__ == '__main__':
 
     keep_playing = True
     while keep_playing:
-            
+
         game(3, "X", 0, "O", 1)
 
-        UI.draw_string(TicTacToe_Game_Window, "Nochmal Spielen? >Klick hier!<", 110, 450, 20)
+        UI.draw_string(
+            TicTacToe_Game_Window, "Nochmal Spielen? >Klick hier!<", 110, 450, 20
+        )
         playagain = False
         while not playagain:
             for event in pygame.event.get():

@@ -46,35 +46,33 @@ class KIPlayer:
     def played_ahead_turn(self):
         temp_board = copy.deepcopy(self.current_board)
         boardsize = temp_board.board_size
-        symbol = ""
-        steps = 3
         options_to_choose_from = []
         for collumn in range(boardsize):
             temp_board = copy.deepcopy(self.current_board)
-            valid_move, last_played_position = temp_board.drop_stone(self.player_symbol, collumn)
+            valid_move, _ = temp_board.drop_stone(self.player_symbol, collumn)
             if not valid_move: continue
            
             sub_temp_board = copy.deepcopy(temp_board)
+            enemy_win_with = (False,)
             for choise in range(boardsize):
                 enemy_valid_move, enemy_last_played_position = sub_temp_board.drop_stone(self.enemy_symbol, choise)
                 if enemy_valid_move:
                     enemy_win_with = sub_temp_board.check_win(self.enemy_symbol, enemy_last_played_position)
                     if enemy_win_with != (False,):
+                        #sub_temp_board.draw_winning_lines(self.enemy_symbol, *enemy_win_with)
+                        print(f"cant use {collumn} for {self.player_symbol}!")
+                        #time.sleep(.5)
                         break
                 sub_temp_board = copy.deepcopy(temp_board)
             
             sub_temp_board = None
             if enemy_win_with == (False,):
-                #print (f"play a stone at {collumn} does not create a win for enemy!")
                 options_to_choose_from.append(collumn)
-            # else:
-            #     pass
-            #     #print (f"play a stone at {collumn} does create a win for enemy!!!!!")
 
         temp_board = None
-        print(options_to_choose_from)
-        time.sleep(.5)
-        if len(options_to_choose_from) == boardsize:
+        # print(options_to_choose_from)
+        # time.sleep(.5)
+        if len(options_to_choose_from) == boardsize or options_to_choose_from == []:
             return -1, (False, )
         else:
             return random.choice(options_to_choose_from), (False, )

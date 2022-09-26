@@ -20,8 +20,8 @@ def user_input(board_size) -> int:
 def KI_player_move(board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player_symbol):
     # Cpu Player
     print (f"current player : {player_symbol}")
-    pl_win, _ = KIplayer.check_player_win()
-    en_win, _ = KIplayer.check_enemy_win()
+    pl_win = KIplayer.check_player_win()
+    en_win = KIplayer.check_enemy_win()
     if pl_win != -1:
         place_at_rnd = pl_win
         print("can make win!")

@@ -1,12 +1,9 @@
 import copy
-import random, time
-import colorama
-import c4_Board as Board
-
+import c4_Board as c4_Board
 
 class KIPlayer:
     """KI Player class"""
-    def __init__(self, board_to_play: Board, player_symbol: str, enemy_symbol: str):
+    def __init__(self, board_to_play: c4_Board.Board, player_symbol: str, enemy_symbol: str):
         self.current_board = board_to_play
         self.player_symbol = player_symbol
         self.enemy_symbol = enemy_symbol
@@ -17,12 +14,13 @@ class KIPlayer:
         for choise in range(temp_board.board_size):
             player_valid_move, player_last_played_position = temp_board.drop_stone(self.player_symbol, choise)
             if player_valid_move:
-                player_win_with = temp_board.check_win(self.player_symbol, player_last_played_position)
+                player_win_with = temp_board.check_win(self.player_symbol, 
+                                                       player_last_played_position)
                 if player_win_with != (False,):
                     return choise, player_win_with
 
             temp_board = copy.deepcopy(self.current_board)
-                       
+
         temp_board = None
         return -1, (False, )
 
@@ -33,7 +31,8 @@ class KIPlayer:
         for choise in range(temp_board.board_size):
             enemy_valid_move, enemy_last_played_position = temp_board.drop_stone(self.enemy_symbol, choise)
             if enemy_valid_move:
-                enemy_win_with = temp_board.check_win(self.enemy_symbol, enemy_last_played_position)
+                enemy_win_with = temp_board.check_win(self.enemy_symbol, 
+                                                      enemy_last_played_position)
                 if enemy_win_with != (False,):
                     return choise, enemy_win_with
 
@@ -43,7 +42,7 @@ class KIPlayer:
         return -1, (False, )
 
 
-    def played_ahead_turn(self):
+    def play_one_turn_ahead(self):
         temp_board = copy.deepcopy(self.current_board)
         boardsize = temp_board.board_size
         options_to_choose_from = []
@@ -51,28 +50,61 @@ class KIPlayer:
             temp_board = copy.deepcopy(self.current_board)
             valid_move, _ = temp_board.drop_stone(self.player_symbol, collumn)
             if not valid_move: continue
-           
+
             sub_temp_board = copy.deepcopy(temp_board)
             enemy_win_with = (False,)
             for choise in range(boardsize):
                 enemy_valid_move, enemy_last_played_position = sub_temp_board.drop_stone(self.enemy_symbol, choise)
                 if enemy_valid_move:
-                    enemy_win_with = sub_temp_board.check_win(self.enemy_symbol, enemy_last_played_position)
+                    enemy_win_with = sub_temp_board.check_win(self.enemy_symbol, 
+                                                              enemy_last_played_position)
                     if enemy_win_with != (False,):
-                        #sub_temp_board.draw_winning_lines(self.enemy_symbol, *enemy_win_with)
                         print(f"cant use {collumn} for {self.player_symbol}!")
-                        #time.sleep(.5)
                         break
                 sub_temp_board = copy.deepcopy(temp_board)
-            
+
             sub_temp_board = None
             if enemy_win_with == (False,):
                 options_to_choose_from.append(collumn)
 
         temp_board = None
-        # print(options_to_choose_from)
-        # time.sleep(.5)
-        if len(options_to_choose_from) == boardsize or options_to_choose_from == []:
-            return -1, (False, )
+        if options_to_choose_from == []:
+            return tuple(range(boardsize))
         else:
-            return random.choice(options_to_choose_from), (False, )
+            return tuple(options_to_choose_from)
+
+    def play_best_option(self, only_choose_from_this_list: tuple):
+        temp_board = copy.deepcopy(self.current_board)
+        boardsize = temp_board.board_size
+        options_to_choose_from = []
+        
+        #print(f"input to func   : {only_choose_from_this_list}")
+        if not only_choose_from_this_list:
+            return tuple(range(boardsize))
+
+        for collumn in only_choose_from_this_list:
+            temp_board = copy.deepcopy(self.current_board)
+            valid_move, _ = temp_board.drop_stone(self.player_symbol, collumn)
+            if not valid_move: continue
+
+            sub_temp_board = copy.deepcopy(temp_board)
+            player_win_with = (False,)
+            for choise in range(boardsize):
+                player_valid_move, player_last_played_position = sub_temp_board.drop_stone(self.player_symbol, choise)
+                if player_valid_move:
+                    player_win_with = sub_temp_board.check_win(self.player_symbol, 
+                                                              player_last_played_position)
+                    if player_win_with != (False,):
+                        options_to_choose_from.append(collumn)
+                        break
+                sub_temp_board = copy.deepcopy(temp_board)
+
+            sub_temp_board = None
+
+        temp_board = None
+        #input(f"output from func : {options_to_choose_from}")
+        if options_to_choose_from == []:
+            return only_choose_from_this_list
+        else:
+            return tuple(options_to_choose_from)
+

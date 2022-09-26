@@ -3,7 +3,6 @@ import time
 import os
 import colorama
 
-
 class Board:
     """Main board class"""
 
@@ -14,6 +13,7 @@ class Board:
         self.board_state = list(self.empty_space * self.board_size * self.board_size)
         self.player_symbol1 = player_symbol1
         self.player_symbol2 = player_symbol2
+
 
     def draw(self):
         """ Method to draw the board """
@@ -44,8 +44,8 @@ class Board:
         for row in range(self.board_size):
             print(str(row)[-1], end = "")
         print("-")
-        
-        
+
+
     def draw_winning_lines(self, symbol, stone1, stone2, stone3, stone4):
         backup_list = self.board_state[:]
 
@@ -56,6 +56,7 @@ class Board:
         self.draw()
         time.sleep(.2)
         self.board_state = backup_list[:]
+
 
     def drop_stone(self, player_symbol, collumn: int):
         """drop a stone of a player
@@ -70,14 +71,14 @@ class Board:
             self.board_state[safed_last_empty] = player_symbol
             return True, safed_last_empty
         return False, safed_last_empty
-    
+
 
     def check_win(self, player_symbol, index) -> tuple:
         """check if a player is winning"""
         show_line = "----" #"DDVH"
 
         if self.board_state[index] == player_symbol:
-            
+
             # diagonal left -> right \ up -> down 
             for i in range(4):
                 root_row = index // self.board_size               
@@ -99,7 +100,7 @@ class Board:
                     self.draw_winning_lines(
                         self.board_state[index], stone1, stone2, stone3, stone4
                     )
-                    
+
                 if (
                     self.board_state[stone1] == player_symbol
                     and self.board_state[stone2] == player_symbol
@@ -107,7 +108,7 @@ class Board:
                     and self.board_state[stone4] == player_symbol
                 ):
                     return (stone1, stone2, stone3, stone4)
-            
+
             # diagonal right -> left / up -> down
             for i in range(4):
                 root_row = index // self.board_size
@@ -115,7 +116,7 @@ class Board:
                 stone2 = index + (2 - i) - (self.board_size * 2) + (i * self.board_size)
                 stone3 = index + (1 - i) - (self.board_size * 1) + (i * self.board_size)
                 stone4 = index + (0 - i) - (self.board_size * 0) + (i * self.board_size)
-                                           
+
                 if stone1 < ((root_row - (3-i))*self.board_size) or stone1 < 0: continue
                 if stone1 > (self.board_size-1) + (root_row - (3-i))*self.board_size or stone1 > (self.board_size*self.board_size)-1: continue
                 if stone2 < ((root_row - (2-i))*self.board_size) or stone1 < 0: continue
@@ -129,7 +130,7 @@ class Board:
                     self.draw_winning_lines(
                         self.board_state[index], stone1, stone2, stone3, stone4
                     )
-                    
+
                 if (
                     self.board_state[stone1] == player_symbol
                     and self.board_state[stone2] == player_symbol
@@ -137,7 +138,7 @@ class Board:
                     and self.board_state[stone4] == player_symbol
                 ):
                     return (stone1, stone2, stone3, stone4)
-                
+
             # vertical
             for i in range(4):
                 root_row = (index - ((index // self.board_size) * self.board_size))+1
@@ -147,21 +148,17 @@ class Board:
                 stone2 = ((index - (i * self.board_size)) + self.board_size*1)
                 stone3 = ((index - (i * self.board_size)) + self.board_size*2)
                 stone4 = ((index - (i * self.board_size)) + self.board_size*3)
-                
-                #print(self.board_size*self.board_size,root_row,root_collomn,max_index,stone1,stone2,stone3,stone4)
-                #time.sleep(.2)
-                #input()
-                
+
                 if stone1 < 0 or stone2 < 0 or stone3 < 0 or stone4 < 0:
                     continue
                 if stone1 > max_index or stone2 > max_index or stone3 > max_index or stone4 > max_index:
                     continue
-                
+
                 if show_line[2] == "V":
                     self.draw_winning_lines(
                         self.board_state[index], stone1, stone2, stone3, stone4
                     )
-                
+
                 if (
                     self.board_state[stone1] == player_symbol
                     and self.board_state[stone2] == player_symbol
@@ -169,39 +166,35 @@ class Board:
                     and self.board_state[stone4] == player_symbol
                 ):
                     return (stone1, stone2, stone3, stone4)
-                
+
             # Horizontal
-            for i in range(4):#self.board_size - 3):
+            for i in range(4):
                 stone1 = index - (3 - i)
                 stone2 = index - (2 - i)
                 stone3 = index - (1 - i)
                 stone4 = index - (0 - i)
 
-                if stone1 < ((index // self.board_size) * self.board_size):
-                    continue
+                if stone1 < ((index // self.board_size) * self.board_size): continue
                 if stone1 > ((index // self.board_size) * self.board_size) + self.board_size - 1:
                     break
 
-                if stone2 < ((index // self.board_size) * self.board_size):
-                    continue
+                if stone2 < ((index // self.board_size) * self.board_size): continue
                 if stone2 > ((index // self.board_size) * self.board_size) + self.board_size - 1:
                     break
-                
-                if stone3 < ((index // self.board_size) * self.board_size):
-                    continue
+
+                if stone3 < ((index // self.board_size) * self.board_size): continue
                 if stone3 > ((index // self.board_size) * self.board_size) + self.board_size - 1:
                     break
 
-                if stone4 < ((index // self.board_size) * self.board_size):
-                    continue
+                if stone4 < ((index // self.board_size) * self.board_size): continue
                 if stone4 > ((index // self.board_size) * self.board_size) + self.board_size - 1:
                     break
-                
+
                 if show_line[3] == "H":
                     self.draw_winning_lines(
                         self.board_state[index], stone1, stone2, stone3, stone4
-                    )         
-                    
+                    )
+
                 if (
                     self.board_state[stone1] == player_symbol
                     and self.board_state[stone2] == player_symbol
@@ -209,5 +202,5 @@ class Board:
                     and self.board_state[stone4] == player_symbol
                 ):
                     return (stone1, stone2, stone3, stone4)
-                
+
         return (False,)

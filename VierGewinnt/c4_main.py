@@ -42,14 +42,14 @@ def KI_player_move(board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player
             # can use any field!
             print("KI will chose from random object")
             place_at_rnd = random.randint(0, board.board_size)
-    print()
-    input(f"final KI decision >>{place_at_rnd}<< press enter to continue...")
+    #print()
+    #input(f"final KI decision >>{place_at_rnd}<< press enter to continue...")
     return place_at_rnd
 
 ##################################################### MAIN FUNCTION #############################################
 def main():
     """This is the main program"""
-    game_size = 7
+    game_size = 10
     player_symbol1 = "0"
     player_symbol2 = "O"
     # create all objects

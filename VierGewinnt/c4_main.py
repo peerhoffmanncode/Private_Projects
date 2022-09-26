@@ -19,17 +19,15 @@ def user_input(board_size) -> int:
 
 def KI_player_move(board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player_symbol):
     # Cpu Player
-    print (f"current player : {player_symbol}")
+    print (f"[{player_symbol}] players turn")
     pl_win = KIplayer.check_player_win()
     en_win = KIplayer.check_enemy_win()
     if pl_win != -1:
         place_at_rnd = pl_win
-        print("can make win!")
-        input()
+        print(f"player {player_symbol} can win!")
     elif en_win != -1:
         place_at_rnd = en_win
-        print("prohibit enemy win!")
-        input()
+        print("prohibit enemy players win!")
     else:
         options_to_choosefrom = []
         options_to_choosefrom = KIplayer.play_one_turn_ahead()
@@ -38,14 +36,14 @@ def KI_player_move(board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player
         print(f"|play_best_option|    -> left options to choose from {options_to_choosefrom}")
         if options_to_choosefrom:
             # fields restricted
-            print(f"chosen from list => {options_to_choosefrom}")
+            print(f"KI will chose from this list => {options_to_choosefrom}")
             place_at_rnd = random.choice(options_to_choosefrom)
         else:
             # can use any field!
-            print("chosen from random object")
+            print("KI will chose from random object")
             place_at_rnd = random.randint(0, board.board_size)
-        
-        input(f"final decision >> {place_at_rnd}")
+    print()
+    input(f"final KI decision >>{place_at_rnd}<< press enter to continue...")
     return place_at_rnd
 
 ##################################################### MAIN FUNCTION #############################################

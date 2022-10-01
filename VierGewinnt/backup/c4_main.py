@@ -1,7 +1,9 @@
 import random
+import time
+import os
 import colorama
-import c4_Board
-import c4_KIPlayer
+import c4_Board as c4_Board
+import c4_KIPlayer as c4_KIPlayer
 
 def user_input(board_size: int) -> int:
     ''' function to get user input/ move '''
@@ -16,31 +18,6 @@ def user_input(board_size: int) -> int:
                 print("wrong input!")
         except ValueError:
             print("wrong input!")
-            
-def reorder_list(list_to_work_on, board_size) -> list:
-    ''' functiom to reorder a give list
-        0,1,2,3,4,5,6
-        3,2,4,1,5,0,6
-    '''
-    if len(list_to_work_on) > 2:
-        max = (len(list_to_work_on)//2)
-        if max > board_size: max = board_size
-        if max < 1: max = 1
-        tmp = list_to_work_on
-        list_to_work_on=[]
-        same=None
-        for find_column in range(max+1):
-            for directional_switch in range(-1,2,2):
-                pick = max+(find_column * directional_switch)
-                if pick >= len(tmp):
-                    break
-                elif pick == same:
-                    continue
-                list_to_work_on.append(tmp[pick])
-                same = pick
-        return list_to_work_on
-    else:
-        return list_to_work_on
 
 def KI_player_move(board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player_symbol: str) -> int:
     ''' function to get KI Player move '''
@@ -66,17 +43,40 @@ def KI_player_move(board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player
         print(f"prohibit enemy players win! KI Should place stone @ {column_to_place_stone}") # for debug!
     else:
         #/--/ check if enemy player could win after KI player place a stone!
-        options_to_choosefrom = KIplayer.player_looks_one_turn_ahead()
-        print(f"|player_looks_one_turn_ahead| -> left options to choose from {options_to_choosefrom}") # for debug!
-        
-        # rearrange given list!
-        #options_to_choosefrom = reorder_list(options_to_choosefrom, board.board_size)
+        options_to_choosefrom = KIplayer.play_one_turn_ahead()
+        print(f"|play_one_turn_ahead| -> left options to choose from {options_to_choosefrom}") # for debug!
         #/--/ check if player could win with the next two stones!
+        #options_to_choosefrom = (0,1)
         options_to_choosefrom = KIplayer.play_best_option(options_to_choosefrom)
         
-        # was mach'e mer nu mit der Zahl?
         column_to_place_stone = random.choice(options_to_choosefrom) # options_to_choosefrom[0]
-        print(f"|play_best_option|            -> left options to choose from {options_to_choosefrom}") # for debug!
+        print(f"|play_best_option|    -> left options to choose from {options_to_choosefrom}") # for debug!
+        
+        
+        
+        # if len(options_to_choosefrom) == board.board_size:
+        #     # fields restricted
+        #     column_to_place_stone = None
+        #     for find_column in range(((board.board_size//2)+1)):
+        #         if column_to_place_stone != None:
+        #             break
+        #         for directional_switch in range(-1,2,2):
+        #             pick_columnen = (board.board_size*board.board_size)-1-((board.board_size)//2)+(find_column * directional_switch)
+        #             if board.board_state[pick_columnen] != board.player_symbol1 and board.board_state[pick_columnen] != board.player_symbol2:
+        #                 column_to_place_stone = board.board_size-((board.board_size*board.board_size) - pick_columnen)
+        #                 break
+        #     if column_to_place_stone == None:
+        #         column_to_place_stone = random.randint(0, board.board_size-1)
+        #         print("KI will chose from random object") # for debug!
+        #     else:
+        #         print(f"KI will chose from first played stones!!") # for debug!
+        # elif len(options_to_choosefrom) > 0:
+        #     print(f"KI will chose from this list => {options_to_choosefrom}") # for debug!
+        #     column_to_place_stone = random.choice(options_to_choosefrom)
+        # else:
+        #     # can use any field!
+        #     print("KI will chose from random object") # for debug!
+        #     column_to_place_stone = random.randint(0, board.board_size-1)
 
     input(f"final KI decision >>{column_to_place_stone}<< press enter to continue...")
     return column_to_place_stone
@@ -126,7 +126,7 @@ def main():
             main_board1.draw()
             
             # Does one player win?
-            winning_stones = main_board1.check_win(player_symbol, last_played_position, 4)
+            winning_stones = main_board1.check_win(player_symbol, last_played_position)
             if winning_stones != (False,):
                 
                 # last stone of looser marked as RED

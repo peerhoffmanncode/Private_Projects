@@ -1,4 +1,4 @@
-#import random
+import time
 import colorama
 import c4_Board
 import c4_KIPlayer
@@ -20,12 +20,12 @@ def user_input(board_size: int) -> int:
 
 
 def KI_player_move(
-    board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player_symbol: str) -> int:
+    board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player_symbol: str, main_depth=5) -> int:
     """function to get KI Player move"""
-    print(f"[{player_symbol}] players turn")  # for debug!
-    column_to_place_stone=KIplayer.KIplayer_do_turn(depth=5)
-
-    input(f"final KI decision >>{column_to_place_stone}<< press enter to continue...")
+    print(f"[{player_symbol}] players turn, logical depth [{main_depth}] steps")  # for debug!
+    column_to_place_stone=KIplayer.KIplayer_do_turn(player_symbol, depth=main_depth)
+    print(f"final KI {player_symbol} decision >>{column_to_place_stone}<< press enter to continue...")
+    
     return column_to_place_stone
 
 
@@ -39,35 +39,49 @@ def main():
     # list of all stones played
     all_played_moves = []
     # Player symbols
-    player_symbol1 = "O"
-    player_symbol2 = "X"
+    player_symbol1 = "2"
+    player_symbol2 = "0"
     # create board and KI Player objects
     main_board1 = c4_Board.Board(game_size, player_symbol1, player_symbol2)
-    cpu_player1 = c4_KIPlayer.KIPlayer(main_board1, player_symbol1, player_symbol2)
-    cpu_player2 = c4_KIPlayer.KIPlayer(main_board1, player_symbol2, player_symbol1)
+    cpu_player = c4_KIPlayer.KIPlayer(main_board1, player_symbol1, player_symbol2)
+    #cpu_player2 = c4_KIPlayer.KIPlayer(main_board1, player_symbol2, player_symbol1)
 
     # draw empty board
     main_board1.draw()
     # main game loop
+    cpu_depth = 5
     while True:
         # Which player is to play?
         if played_steps % 2 == 0:
             player_symbol = player_symbol1
             enemy_symbol = player_symbol2
             # CPU player call
+            check = time.time()
             column_to_place_a_stone = KI_player_move(
-                main_board1, cpu_player1, player_symbol
+                main_board1, cpu_player, player_symbol, main_depth=cpu_depth
             )
+            if time.time() - check > .5:
+                cpu_depth = 5
+            else:
+                cpu_depth += 1
         else:
             player_symbol = player_symbol2
             enemy_symbol = player_symbol1
             # CPU player call
-            column_to_place_a_stone = KI_player_move(
-                main_board1, cpu_player2, player_symbol
-            )
+            # check = time.time()
+            # column_to_place_a_stone = KI_player_move(
+            #     main_board1, cpu_player, player_symbol, main_depth=cpu_depth
+            # )
+            # if time.time() - check > .5:
+            #     cpu_depth = 5
+            # else:
+            #     cpu_depth += 1
             # Human player call
-            #column_to_place_a_stone = user_input(main_board1.board_size)
-
+            column_to_place_a_stone = user_input(main_board1.board_size)
+            
+        
+        #input()
+            
         # drop stone if chosen move is valid ?
         valid_move, last_played_position = main_board1.drop_stone(
             player_symbol, column_to_place_a_stone
@@ -83,7 +97,7 @@ def main():
 
             # Does one player win?
             winning_stones = main_board1.check_win(player_symbol, enemy_symbol)
-            if winning_stones[0] != False and winning_stones[0] != None:
+            if winning_stones[0] != -1 and winning_stones[0] != 1:
 
                 # last stone of looser marked as RED
                 main_board1.board_state[all_played_moves[-2][0]][all_played_moves[-2][1]] = (
@@ -109,17 +123,10 @@ def main():
 
                 # game restart ! -> init all objects again!
                 main_board1 = c4_Board.Board(game_size, player_symbol1, player_symbol2)
-                cpu_player1 = c4_KIPlayer.KIPlayer(
-                    main_board1, player_symbol1, player_symbol2
-                )
-                cpu_player2 = c4_KIPlayer.KIPlayer(
-                    main_board1, player_symbol2, player_symbol1
-                )
                 played_steps = 0
                 all_played_moves = []
                 input("press to restart!!")
                 continue
-
 
 
         # is the board full board?

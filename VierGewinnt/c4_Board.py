@@ -1,7 +1,7 @@
 """ Board class file"""
 import time
 import os
-from tkinter import S
+import copy
 import colorama
 
 
@@ -39,13 +39,15 @@ class Board:
                         + colorama.Fore.RESET,
                         end="",
                     )
-                else:
+                elif self.player_symbol2 == self.board_state[row][column]:
                     print(
                         colorama.Fore.YELLOW
                         + self.board_state[row][column]
                         + colorama.Fore.RESET,
                         end="",
                     )
+                else:
+                    print(self.board_state[row][column], end="")
             print("|")
         print("  \\" + ("-" * self.board_size) + "/")
         print("  -", end="")
@@ -55,7 +57,11 @@ class Board:
 
     def draw_winning_lines(self, symbol, stone1, stone2, stone3, stone4):
         """draw helper lines for debugging"""
-        backup = self.board_state.copy()
+        bkp1 = self.board_state[stone1[0]][stone1[1]]
+        bkp2 = self.board_state[stone2[0]][stone2[1]]
+        bkp3 = self.board_state[stone3[0]][stone3[1]]
+        bkp4 = self.board_state[stone4[0]][stone4[1]]
+
         self.board_state[stone1[0]][stone1[1]] = (
                 colorama.Fore.GREEN + symbol + colorama.Fore.RESET
             )
@@ -69,9 +75,11 @@ class Board:
                 colorama.Fore.GREEN + symbol + colorama.Fore.RESET
             )
         self.draw()
-        time.sleep(0.1)
-        #self.board_state = backup_list.copy()
-        backup_list = None
+        self.board_state[stone1[0]][stone1[1]] = bkp1
+        self.board_state[stone2[0]][stone2[1]] = bkp2
+        self.board_state[stone3[0]][stone3[1]] = bkp3
+        self.board_state[stone4[0]][stone4[1]] = bkp4
+        #time.sleep(0.05)
 
     def drop_stone(self, player_symbol, column: int):
         """drop a stone of a player check if move is valid place stone"""
@@ -80,7 +88,7 @@ class Board:
                 self.board_state[x][column] = player_symbol
                 return True, (x,column)
         return False, None
-    
+
     def remove_stone(self, symbol: str ,column: int):
         """remove a stone of a player """
         for x in range(self.board_size):
@@ -90,7 +98,7 @@ class Board:
 
     def check_win(self, player_symbol: str, enemy_symbol: str) -> tuple:
         """check if a player is winning"""
-        show_line = "0"  # DDVH flag to show debug lines!4
+        show_line = "-"  # DDVH flag to show debug lines!4
         for winner_symbol in (enemy_symbol,player_symbol):
             # Horizontal
             for x in range(self.board_size-3):
@@ -124,8 +132,11 @@ class Board:
                     if (self.board_state[x-0][y+0]== winner_symbol and self.board_state[x-1][y+1]== winner_symbol and
                         self.board_state[x-2][y+2]== winner_symbol and self.board_state[x-3][y+3]== winner_symbol):
                         return (winner_symbol,(x-0,y+0),(x-1,y+1),(x-2,y+2),(x-3,y+3))
-            
+
         for y in range(self.board_size):
             if self.board_state[0][y] == self.empty_space:
-                return (False,)
-        return (None,)
+                #print(f"0,{y} [{self.board_state[0][y]}]",end="")
+                return (-1,)
+                #return (False,)
+        return (1,)
+        #return (None,)

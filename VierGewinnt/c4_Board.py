@@ -1,224 +1,131 @@
-''' Board class file'''
+""" Board class file"""
 import time
 import os
+from tkinter import S
 import colorama
+
 
 class Board:
     """Main board class"""
 
     def __init__(self, board_size: int, player_symbol1: str, player_symbol2: str):
         """Initialize the board"""
-        self.empty_space = " "
+        self.empty_space = "-"
         self.board_size = board_size
-        self.board_state = list(self.empty_space * self.board_size * self.board_size)
+        self.board_state = [[self.empty_space for j in range(self.board_size)] for i in range(self.board_size)]
         self.player_symbol1 = player_symbol1
         self.player_symbol2 = player_symbol2
-
+        
+        ### 7x7 static (to be implemented)
+        self.lookup_table = [[0.03, 0.04, 0.05, 0.07, 0.05, 0.04, 0.03],
+                             [0.04, 0.06, 0.08, 0.10, 0.08, 0.06, 0.04],
+                             [0.05, 0.08, 0.11, 0.13, 0.11, 0.08, 0.05],
+                             [0.07, 0.10, 0.13, 0.15, 0.13, 0.10, 0.07],
+                             [0.05, 0.08, 0.11, 0.13, 0.11, 0.08, 0.05],
+                             [0.04, 0.06, 0.08, 0.10, 0.08, 0.06, 0.04],
+                             [0.03, 0.04, 0.05, 0.07, 0.05, 0.04, 0.03]]
 
     def draw(self):
-        """ Method to draw the board """
+        """Method to draw the board"""
         os.system("clear")
         print("  /" + ("-" * self.board_size) + "\\")
-        count = 0
         for row in range(self.board_size):
             print(f"{row:2}|", end="")
             for column in range(self.board_size):
-                if self.player_symbol1 == self.board_state[count]:
+                if self.player_symbol1 == self.board_state[row][column]:
                     print(
                         colorama.Fore.CYAN
-                        + self.board_state[count]
+                        + self.board_state[row][column]
                         + colorama.Fore.RESET,
                         end="",
                     )
                 else:
                     print(
                         colorama.Fore.YELLOW
-                        + self.board_state[count]
+                        + self.board_state[row][column]
                         + colorama.Fore.RESET,
                         end="",
                     )
-                count = count + 1
             print("|")
         print("  \\" + ("-" * self.board_size) + "/")
-        print("  -", end = "")
+        print("  -", end="")
         for row in range(self.board_size):
-            print(str(row)[-1], end = "")
+            print(str(row)[-1], end="")
         print("-")
 
-
     def draw_winning_lines(self, symbol, stone1, stone2, stone3, stone4):
-        ''' draw helper lines for debugging '''
-        backup_list = self.board_state[:]
-        if stone1:
-            self.board_state[stone1] = colorama.Fore.GREEN + symbol + colorama.Fore.RESET
-        if stone2:
-            self.board_state[stone2] = colorama.Fore.GREEN + symbol + colorama.Fore.RESET
-        if stone3:
-            self.board_state[stone3] = colorama.Fore.GREEN + symbol + colorama.Fore.RESET
-        if stone4:
-            self.board_state[stone4] = colorama.Fore.GREEN + symbol + colorama.Fore.RESET
+        """draw helper lines for debugging"""
+        backup = self.board_state.copy()
+        self.board_state[stone1[0]][stone1[1]] = (
+                colorama.Fore.GREEN + symbol + colorama.Fore.RESET
+            )
+        self.board_state[stone2[0]][stone2[1]] = (
+                colorama.Fore.GREEN + symbol + colorama.Fore.RESET
+            )
+        self.board_state[stone3[0]][stone3[1]] = (
+                colorama.Fore.GREEN + symbol + colorama.Fore.RESET
+            )
+        self.board_state[stone4[0]][stone4[1]] = (
+                colorama.Fore.GREEN + symbol + colorama.Fore.RESET
+            )
         self.draw()
-        time.sleep(.05)
-        self.board_state = backup_list[:]
-
+        time.sleep(0.1)
+        #self.board_state = backup_list.copy()
+        backup_list = None
 
     def drop_stone(self, player_symbol, column: int):
-        """drop a stone of a player check if move is valide place stone"""
-        safed_last_empty = -1
-        for i in range(column, self.board_size * self.board_size, self.board_size):
-            if self.board_state[i] == self.empty_space:
-                safed_last_empty = i
+        """drop a stone of a player check if move is valid place stone"""
+        for x in range(self.board_size-1,-1,-1):
+            if self.board_state[x][column] == self.empty_space:
+                self.board_state[x][column] = player_symbol
+                return True, (x,column)
+        return False, None
+    
+    def remove_stone(self, symbol: str ,column: int):
+        """remove a stone of a player """
+        for x in range(self.board_size):
+            if self.board_state[x][column] != self.empty_space:
+                self.board_state[x][column] = self.empty_space
+                break
 
-        if safed_last_empty != -1:
-            self.board_state[safed_last_empty] = player_symbol
-            return True, safed_last_empty
-        return False, safed_last_empty
-
-
-    def check_win(self, player_symbol: str, index: int, check_for_x_in_a_row: int) -> tuple:
+    def check_win(self, player_symbol: str, enemy_symbol: str) -> tuple:
         """check if a player is winning"""
-        show_line = "----" # DDVH flag to show debug lines!
-        stone_list = [None,None,None,None]
-
-        if self.board_state[index] == player_symbol:
-            # diagonal left -> right \ up -> down 
-            for i in range(check_for_x_in_a_row):
-                # calculate stones 4 stones
-                root_row = index // self.board_size
-                
-                if check_for_x_in_a_row > 3:
-                    stone_list[3] = index - (3 - i) - (self.board_size * 3) + (i * self.board_size)
-                    if stone_list[3] < ((root_row - (3-i))*self.board_size) or stone_list[3] < 0: continue
-                    if stone_list[3] > (self.board_size-1) + (root_row - (3-i))*self.board_size or stone_list[3] > (self.board_size*self.board_size)-1: continue
-                if check_for_x_in_a_row > 2:
-                    stone_list[2] = index - (2 - i) - (self.board_size * 2) + (i * self.board_size)
-                    if stone_list[2] < ((root_row - (2-i))*self.board_size) or stone_list[2] < 0: continue
-                    if stone_list[2] > (self.board_size-1) + (root_row - (2-i))*self.board_size or stone_list[2] > (self.board_size*self.board_size)-1: continue
-                if check_for_x_in_a_row > 1:
-                    stone_list[1] = index - (1 - i) - (self.board_size * 1) + (i * self.board_size)
-                    if stone_list[1] < ((root_row - (1-i))*self.board_size) or stone_list[1] < 0: continue
-                    if stone_list[1] > (self.board_size-1) + (root_row - (1-i))*self.board_size or stone_list[1] > (self.board_size*self.board_size)-1: continue
-                if check_for_x_in_a_row > 0:
-                    stone_list[0] = index - (0 - i) - (self.board_size * 0) + (i * self.board_size)
-                    if stone_list[0] < ((root_row - (0-i))*self.board_size) or stone_list[0] < 0: continue
-                    if stone_list[0] > ((self.board_size-1) + (root_row - (0-i))*self.board_size) or stone_list[0] > (self.board_size*self.board_size)-1: continue
-                # draw helper lines (debug)
-                if show_line[0] == "D":
-                    self.draw_winning_lines(
-                        self.board_state[index], stone_list[0], stone_list[1], stone_list[2], stone_list[3]
-                    )
-                # return stones if X-in-a-row!
-                found_stone = []
-                for i in range(check_for_x_in_a_row):
-                    if self.board_state[stone_list[i]] == player_symbol:
-                        found_stone.append(stone_list[i])
-                if len(found_stone) >= check_for_x_in_a_row:
-                    found_stone.append("diagonal left -> right")
-                    return tuple(found_stone)
-
-            # diagonal right -> left / up -> down
-            for i in range(check_for_x_in_a_row):
-                # calculate stones 4 stones
-                root_row = index // self.board_size
-                # check intersection
-                if check_for_x_in_a_row > 3:
-                    stone_list[3] = index + (3 - i) - (self.board_size * 3) + (i * self.board_size)
-                    if stone_list[3] < ((root_row - (3-i))*self.board_size) or stone_list[3] < 0: continue
-                    if stone_list[3] > (self.board_size-1) + (root_row - (3-i))*self.board_size or stone_list[3] > (self.board_size*self.board_size)-1: continue
-                if check_for_x_in_a_row > 2:
-                    stone_list[2] = index + (2 - i) - (self.board_size * 2) + (i * self.board_size)
-                    if stone_list[2] < ((root_row - (2-i))*self.board_size) or stone_list[2] < 0: continue
-                    if stone_list[2] > (self.board_size-1) + (root_row - (2-i))*self.board_size or stone_list[2] > (self.board_size*self.board_size)-1: continue
-                if check_for_x_in_a_row > 1:
-                    stone_list[1] = index + (1 - i) - (self.board_size * 1) + (i * self.board_size)
-                    if stone_list[1] < ((root_row - (1-i))*self.board_size) or stone_list[1] < 0: continue
-                    if stone_list[1] > (self.board_size-1) + (root_row - (1-i))*self.board_size or stone_list[1] > (self.board_size*self.board_size)-1: continue
-                if check_for_x_in_a_row > 0:
-                    stone_list[0] = index + (0 - i) - (self.board_size * 0) + (i * self.board_size)
-                    if stone_list[0] < ((root_row - (0-i))*self.board_size) or stone_list[0] < 0: continue
-                    if stone_list[0] > ((self.board_size-1) + (root_row - (0-i))*self.board_size) or stone_list[0] > (self.board_size*self.board_size)-1: continue
-                # draw helper lines (debug)
-                if show_line[1] == "D":
-                    self.draw_winning_lines(
-                        self.board_state[index], stone_list[0], stone_list[1], stone_list[2], stone_list[3]
-                    )
-                found_stone = []
-                for i in range(check_for_x_in_a_row):
-                    if self.board_state[stone_list[i]] == player_symbol:
-                        found_stone.append(stone_list[i])
-                if len(found_stone) >= check_for_x_in_a_row:
-                    found_stone.append("diagonal right -> left /")
-                    return tuple(found_stone)
-
-            # Vertical
-            for i in range(check_for_x_in_a_row):
-                # calculate stones 4 stones
-                root_row = (index - ((index // self.board_size) * self.board_size))+1
-                root_collomn = index // self.board_size
-                max_index = index + ((self.board_size-1-root_collomn)*self.board_size)
-                if check_for_x_in_a_row > 0:
-                    stone_list[0] = ((index - (i * self.board_size)) + self.board_size*0)
-                if check_for_x_in_a_row > 1:
-                    stone_list[1] = ((index - (i * self.board_size)) + self.board_size*1)
-                if check_for_x_in_a_row > 2:
-                    stone_list[2] = ((index - (i * self.board_size)) + self.board_size*2)
-                if check_for_x_in_a_row > 3:
-                    stone_list[3] = ((index - (i * self.board_size)) + self.board_size*3)
-                # check intersection
-                if stone_list[0]:
-                    if stone_list[0] < 0 or stone_list[0] > max_index: continue
-                if stone_list[1]:
-                    if stone_list[1] < 0 or stone_list[1] > max_index: continue
-                if stone_list[2]:
-                    if stone_list[2] < 0 or stone_list[2] > max_index: continue
-                if stone_list[3]:
-                    if stone_list[3] < 0 or stone_list[3] > max_index: continue
-                # draw helper lines (debug)
-                if show_line[2] == "V":
-                    self.draw_winning_lines(
-                        self.board_state[index], stone_list[0], stone_list[1], stone_list[2], stone_list[3]
-                    )
-                found_stone = []
-                for i in range(check_for_x_in_a_row):
-                    if self.board_state[stone_list[i]] == player_symbol:
-                        found_stone.append(stone_list[i])
-                if len(found_stone) >= check_for_x_in_a_row:
-                    found_stone.append("vertical")
-                    return tuple(found_stone)
-
+        show_line = "0"  # DDVH flag to show debug lines!4
+        for winner_symbol in (enemy_symbol,player_symbol):
             # Horizontal
-            for i in range(check_for_x_in_a_row):
-                # calculate stones 4 stones
-                # check intersection
-                if check_for_x_in_a_row > 3:
-                    stone_list[3] = index - (3 - i)
-                    if stone_list[3] < ((index // self.board_size) * self.board_size): continue
-                    if stone_list[3] > ((index // self.board_size) * self.board_size) + self.board_size - 1: break
-                if check_for_x_in_a_row > 2:
-                    stone_list[2] = index - (2 - i)
-                    if stone_list[2] < ((index // self.board_size) * self.board_size): continue
-                    if stone_list[2] > ((index // self.board_size) * self.board_size) + self.board_size - 1: break
-                if check_for_x_in_a_row > 1:
-                    stone_list[1] = index - (1 - i)
-                    if stone_list[1] < ((index // self.board_size) * self.board_size): continue
-                    if stone_list[1] > ((index // self.board_size) * self.board_size) + self.board_size - 1: break
-                if check_for_x_in_a_row > 0:
-                    stone_list[0] = index - (0 - i)
-                    if stone_list[0] < ((index // self.board_size) * self.board_size): continue
-                    if stone_list[0] > ((index // self.board_size) * self.board_size) + self.board_size - 1: break
-                
-                # draw helper lines (debug)
-                if show_line[3] == "H":
-                    self.draw_winning_lines(
-                        self.board_state[index], stone_list[0], stone_list[1], stone_list[2], stone_list[3]
-                    )
-                found_stone = []
-                for i in range(check_for_x_in_a_row):
-                    if self.board_state[stone_list[i]] == player_symbol:
-                        found_stone.append(stone_list[i])
-                if len(found_stone) >= check_for_x_in_a_row:
-                    found_stone.append("Horizontal")
-                    return tuple(found_stone)
-
-        # return not enough stones in a row!
-        return (False,)
+            for x in range(self.board_size-3):
+                for y in range(self.board_size):
+                    if "H" in show_line:
+                        self.draw_winning_lines(winner_symbol,(x+0,y),(x+1,y),(x+2,y),(x+3,y))
+                    if (self.board_state[x+0][y]== winner_symbol and self.board_state[x+1][y]== winner_symbol and
+                        self.board_state[x+2][y]== winner_symbol and self.board_state[x+3][y]== winner_symbol):
+                        return (winner_symbol,(x+0,y),(x+1,y),(x+2,y),(x+3,y))
+            # Vertical
+            for x in range(self.board_size):
+                for y in range(self.board_size-3):
+                    if "V" in show_line:
+                        self.draw_winning_lines(winner_symbol,(x,y+0),(x,y+1),(x,y+2),(x,y+3))
+                    if (self.board_state[x][y+0]== winner_symbol and self.board_state[x][y+1]== winner_symbol and
+                        self.board_state[x][y+2]== winner_symbol and self.board_state[x][y+3]== winner_symbol):
+                        return (winner_symbol,(x,y+0),(x,y+1),(x,y+2),(x,y+3))
+            # Diagonal
+            for x in range(self.board_size-3):
+                for y in range(self.board_size-3):
+                    if "1" in show_line:
+                        self.draw_winning_lines(winner_symbol,(x+0,y+0),(x+1,y+1),(x+2,y+2),(x+3,y+3))
+                    if (self.board_state[x+0][y+0]== winner_symbol and self.board_state[x+1][y+1]== winner_symbol and
+                        self.board_state[x+2][y+2]== winner_symbol and self.board_state[x+3][y+3]== winner_symbol):
+                        return (winner_symbol,(x+0,y+0),(x+1,y+1),(x+2,y+2),(x+3,y+3))
+            # Diagonal
+            for x in range(self.board_size-4,self.board_size):
+                for y in range(self.board_size-3):
+                    if "2" in show_line:
+                        self.draw_winning_lines(winner_symbol,(x-0,y+0),(x-1,y+1),(x-2,y+2),(x-3,y+3))
+                    if (self.board_state[x-0][y+0]== winner_symbol and self.board_state[x-1][y+1]== winner_symbol and
+                        self.board_state[x-2][y+2]== winner_symbol and self.board_state[x-3][y+3]== winner_symbol):
+                        return (winner_symbol,(x-0,y+0),(x-1,y+1),(x-2,y+2),(x-3,y+3))
+            
+        for y in range(self.board_size):
+            if self.board_state[0][y] == self.empty_space:
+                return (False,)
+        return (None,)

@@ -77,6 +77,7 @@ class KIPlayer:
         alpha = -999
         beta = 999
         ki_should_play_this_column = 0
+        print("calculating KIs move...")
 
         for y in range(self.current_board.board_size):
             if self.current_board.board_state[0][y] == self.current_board.empty_space:

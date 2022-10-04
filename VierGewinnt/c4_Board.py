@@ -29,9 +29,7 @@ class Board:
         # call build_lookup_table to create the lookup table
         self.build_lookup_table()
 
-    def build_lookup_table(
-        self,
-    ):
+    def build_lookup_table(self):
         # backup_lookup_table = [[0.03, 0.04, 0.05, 0.07, 0.05, 0.04, 0.03],
         #                        [0.04, 0.06, 0.08, 0.10, 0.08, 0.06, 0.04],
         #                        [0.05, 0.08, 0.11, 0.13, 0.11, 0.08, 0.05],
@@ -68,6 +66,18 @@ class Board:
                 self.lookup_table[x - 1][y + 1] += add_up
                 self.lookup_table[x - 2][y + 2] += add_up
                 self.lookup_table[x - 3][y + 3] += add_up
+        
+        # if self.board_size % 2 == 0:
+        #     index = self.board_size // 2
+        # else:
+        #     index = (self.board_size // 2) + 1
+        # for x in range(self.board_size):
+        #         self.lookup_table[x][index] += 0.1
+                
+        # for x in range(self.board_size):
+        #     print (self.lookup_table[x])
+        
+        # input()
 
     def draw(self):
         """Method to draw the board"""

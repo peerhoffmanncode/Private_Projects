@@ -25,10 +25,10 @@ def KI_player_move(
     player_symbol: str,
     main_depth=5,) -> int:
     """function to get KI Player move"""
+    column_to_place_stone = KIplayer.KIplayer_do_turn()
     print(
         f"[{player_symbol}] players turn, logical depth [{main_depth}] steps"
     )  # for debug!
-    column_to_place_stone = KIplayer.KIplayer_do_turn()
     print(
         f"final KI {player_symbol} decision >>{column_to_place_stone}<< press enter to continue..."
     )
@@ -59,30 +59,30 @@ def main(game_size=7):
         if played_steps % 2 == 0:
             player_symbol = player_symbol1
             enemy_symbol = player_symbol2
+            # # CPU player call
+            # check = time.time()
+            # column_to_place_a_stone = KI_player_move(
+            #     main_board1, cpu_player, player_symbol, main_depth=cpu_player.cpu_depth
+            # )
+            # if time.time() - check > 0.3:
+            #     cpu_player.cpu_depth = 5
+            # else:
+            #     cpu_player.cpu_depth += 1
+            # Human player call
+            column_to_place_a_stone = user_input(main_board1.board_size)
+        else:
+            player_symbol = player_symbol2
+            enemy_symbol = player_symbol1
             # CPU player call
             check = time.time()
             column_to_place_a_stone = KI_player_move(
                 main_board1, cpu_player, player_symbol, main_depth=cpu_player.cpu_depth
             )
-            if time.time() - check > 0.5:
+            if time.time() - check > 0.3:
                 cpu_player.cpu_depth = 5
             else:
                 cpu_player.cpu_depth += 1
-        else:
-            player_symbol = player_symbol2
-            enemy_symbol = player_symbol1
-            # CPU player call
-            # check = time.time()
-            # column_to_place_a_stone = KI_player_move(
-            #     main_board1, cpu_player, player_symbol, main_depth=cpu_player.cpu_depth
-            # )
-            # if time.time() - check > .5:
-            #     cpu_player.cpu_depth = 5
-            # else:
-            #     cpu_player.cpu_depth += 1
-
-            # Human player call
-            column_to_place_a_stone = user_input(main_board1.board_size)
+            
 
         # drop stone if chosen move is valid ?
         valid_move, last_played_position = main_board1.drop_stone(
@@ -128,6 +128,7 @@ def main(game_size=7):
 
                 # game restart ! -> init board object again!
                 main_board1 = c4_Board.Board(game_size, player_symbol1, player_symbol2)
+                cpu_player = c4_KIPlayer.KIPlayer(main_board1, player_symbol1, player_symbol2)
                 played_steps = 0
                 all_played_moves = []
                 input("press to restart!!")
@@ -145,4 +146,4 @@ def main(game_size=7):
 
 ##################################################### CALL MAIN FUNCTION #############################################
 if __name__ == "__main__":
-    main(game_size=7)
+    main(game_size=12)

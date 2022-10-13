@@ -146,4 +146,4 @@ def main(game_size=7):
 
 ##################################################### CALL MAIN FUNCTION #############################################
 if __name__ == "__main__":
-    main(game_size=12)
+    main(game_size=7)

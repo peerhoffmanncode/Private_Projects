@@ -30,14 +30,7 @@ class Board:
         self.build_lookup_table()
 
     def build_lookup_table(self):
-        # backup_lookup_table = [[0.03, 0.04, 0.05, 0.07, 0.05, 0.04, 0.03],
-        #                        [0.04, 0.06, 0.08, 0.10, 0.08, 0.06, 0.04],
-        #                        [0.05, 0.08, 0.11, 0.13, 0.11, 0.08, 0.05],
-        #                        [0.07, 0.10, 0.13, 0.15, 0.13, 0.10, 0.07],
-        #                        [0.05, 0.08, 0.11, 0.13, 0.11, 0.08, 0.05],
-        #                        [0.04, 0.06, 0.08, 0.10, 0.08, 0.06, 0.04],
-        #                        [0.03, 0.04, 0.05, 0.07, 0.05, 0.04, 0.03]]
-        add_up = 0.01
+        add_up = 0.001
         # Vertical
         for x in range(self.board_size - 3):
             for y in range(self.board_size):
@@ -66,18 +59,6 @@ class Board:
                 self.lookup_table[x - 1][y + 1] += add_up
                 self.lookup_table[x - 2][y + 2] += add_up
                 self.lookup_table[x - 3][y + 3] += add_up
-        
-        # if self.board_size % 2 == 0:
-        #     index = self.board_size // 2
-        # else:
-        #     index = (self.board_size // 2) + 1
-        # for x in range(self.board_size):
-        #         self.lookup_table[x][index] += 0.1
-                
-        # for x in range(self.board_size):
-        #     print (self.lookup_table[x])
-        
-        # input()
 
     def draw(self):
         """Method to draw the board"""
@@ -103,11 +84,10 @@ class Board:
                 else:
                     print(self.board_state[row][column], end="")
             print("|")
-        print("  \\" + ("-" * self.board_size) + "/")
-        print("  -", end="")
+        print("  \\", end ="")
         for row in range(self.board_size):
             print(str(row)[-1], end="")
-        print("-")
+        print("/")
 
     def draw_winning_lines(self, symbol, stone1, stone2, stone3, stone4):
         """draw helper lines for debugging"""

@@ -19,7 +19,6 @@ class KIPlayer:
 
     def field_evaluation(self):
         value = 1.0
-
         for x in range(self.current_board.board_size):
             for y in range(self.current_board.board_size):
                 if self.current_board.board_state[x][y] == self.enemy_symbol:
@@ -36,13 +35,13 @@ class KIPlayer:
         if depth == 0:
             return self.field_evaluation()
 
-        for y in range(self.current_board.board_size):
-            if self.current_board.board_state[0][y] == self.current_board.empty_space:
-                self.current_board.drop_stone(self.player_symbol, y)
+        for column in range(self.current_board.board_size):
+            if self.current_board.board_state[0][column] == self.current_board.empty_space:
+                self.current_board.drop_stone(self.player_symbol, column)
                 value = self.find_min(depth - 1, alpha, beta)
                 if value > alpha:
                     alpha = value
-                self.current_board.remove_stone(self.player_symbol, y)
+                self.current_board.remove_stone(self.player_symbol, column)
                 if alpha >= beta:
                     return beta
         return alpha
@@ -77,14 +76,14 @@ class KIPlayer:
         alpha = -999
         beta = 999
         ki_should_play_this_column = 0
-        print("calculating KIs move...")
-
-        for y in range(self.current_board.board_size):
-            if self.current_board.board_state[0][y] == self.current_board.empty_space:
-                self.current_board.drop_stone(self.enemy_symbol, y)
+        for column in range(self.current_board.board_size):
+            print(f"calculating KIs move...{(column/(self.current_board.board_size-1)*100):.1f}%, calculating {self.cpu_depth} stones ahead.", end = "\r")
+            if self.current_board.board_state[0][column] == self.current_board.empty_space:
+                self.current_board.drop_stone(self.enemy_symbol, column)
                 value = self.find_max(self.cpu_depth, alpha, beta)
                 if value < beta:
                     beta = value
-                    ki_should_play_this_column = y
-                self.current_board.remove_stone(self.enemy_symbol, y)
+                    ki_should_play_this_column = column
+                self.current_board.remove_stone(self.enemy_symbol, column)
+        print(f"calculating KIs move...100%, calculating {self.cpu_depth} stones ahead.    ")
         return ki_should_play_this_column

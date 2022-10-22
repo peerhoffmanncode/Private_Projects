@@ -23,7 +23,8 @@ def KI_player_move(
     board: c4_Board.Board,
     KIplayer: c4_KIPlayer.KIPlayer,
     player_symbol: str,
-    main_depth=5,) -> int:
+    main_depth=5,
+) -> int:
     """function to get KI Player move"""
     column_to_place_stone = KIplayer.KIplayer_do_turn()
     print(
@@ -82,7 +83,6 @@ def main(game_size=7):
                 cpu_player.cpu_depth = 5
             else:
                 cpu_player.cpu_depth += 1
-            
 
         # drop stone if chosen move is valid ?
         valid_move, last_played_position = main_board1.drop_stone(
@@ -124,14 +124,19 @@ def main(game_size=7):
                     last_played_position,
                 )
                 print("Others player move  :", all_played_moves[-2])
-                print("All moves played    :", all_played_moves)
+                print("All played stones   :", all_played_moves)
 
                 # game restart ! -> init board object again!
                 main_board1 = c4_Board.Board(game_size, player_symbol1, player_symbol2)
-                cpu_player = c4_KIPlayer.KIPlayer(main_board1, player_symbol1, player_symbol2)
+                cpu_player = c4_KIPlayer.KIPlayer(
+                    main_board1, player_symbol1, player_symbol2
+                )
                 played_steps = 0
                 all_played_moves = []
                 input("press to restart!!")
+
+                # Draw updated board
+                main_board1.draw()
                 continue
 
         # end game if -> board full or all stones are played!

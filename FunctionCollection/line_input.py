@@ -1,4 +1,9 @@
-def line_input(message = "", mode = "", min_char_len = 0, max_char_len = 0) -> str:
+def line_input(message: str = "", mode: str = "", min_char_len: int = 0, max_char_len: int = 0) -> str:
+    ''' function to validate line input
+        mode : "alpha" > just characters
+        mode : "nun" > just numbers
+        mode : "numalpha" or "alphanum" > accepts both
+    '''
     if min_char_len <= 0:
         min_char_len = 0
         min_char_len_check = True
@@ -16,7 +21,6 @@ def line_input(message = "", mode = "", min_char_len = 0, max_char_len = 0) -> s
     strict = False
     mode = mode.lower()
     while not done:
-
         line_input_result = input(message)
         if line_input_result != "" and mode != "":
             if "!" in mode:
@@ -49,5 +53,5 @@ def line_input(message = "", mode = "", min_char_len = 0, max_char_len = 0) -> s
     return line_input_result
 
 
-res = line_input(message = "Eingabe: ", mode = "alpha", min_char_len = 6, max_char_len = 5)
+res = line_input(message = "Input : ", mode = "alpha", min_char_len = 0, max_char_len = 5)
 print(res)

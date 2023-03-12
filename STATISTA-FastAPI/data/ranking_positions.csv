@@ -1,0 +1,4 @@
+position_id,ranking_id,position_country,position_world,published_name,city,state,country,years_awarded,sales_contact_id
+P-999999-0001,P-999999,1,1,Mayo Clinic - Rochester,Rochester,US-MN,US,"2023,2022,2021,2020,2019",2
+P-999999-0002,P-999999,51,,Brigham And Women's Faulkner Hospital,Boston,US-MA,US,"2023,2022,2021,2020",1
+P-999999-0003,P-999999,199,,St. Mary's Regional Medical Center,Enid,US-OK,US,"2023,2022,2021",3

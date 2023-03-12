@@ -20,7 +20,8 @@ def user_input(board_size: int) -> int:
 
 
 def KI_player_move(
-    board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player_symbol: str) -> int:
+    board: c4_Board.Board, KIplayer: c4_KIPlayer.KIPlayer, player_symbol: str
+) -> int:
     """function to get KI Player move"""
     print(f"[{player_symbol}] players turn")  # for debug!
     # /--/ init list of possible moves
@@ -30,7 +31,7 @@ def KI_player_move(
     if player_symbol == board.player_symbol2:
         enemy_symbol = board.player_symbol1
 
-    column_to_place_stone=KIplayer.KIplayer_do_turn(depth=5)
+    column_to_place_stone = KIplayer.ki_player_do_turn(depth=5)
 
     input(f"final KI decision >>{column_to_place_stone}<< press enter to continue...")
     return column_to_place_stone

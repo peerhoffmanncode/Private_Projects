@@ -30,7 +30,7 @@ class Board:
         self.build_lookup_table()
 
     def build_lookup_table(self):
-        add_up = 0.001
+        add_up = 0.00001
         # Vertical
         for x in range(self.board_size - 3):
             for y in range(self.board_size):

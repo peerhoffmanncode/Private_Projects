@@ -1,0 +1,107 @@
+[
+    {
+        "ranking_id": "P-999999",
+        "ranking_name": {
+            "de": null,
+            "en": "World's Best Hospitals 2023",
+            "es": null,
+            "fr": null,
+            "it": null
+        },
+        "ranking_project_path": {
+            "de": null,
+            "en": "/en/healthcare/best-hospitals-world-2023",
+            "es": null,
+            "fr": null,
+            "it": null
+        },
+        "ranking_path": "/en/healthcare/best-hospitals-world-2023/ranking",
+        "ranking_logo_path": "/wp-content/uploads/best-hospitals-world-2023-logo.png",
+        "position_country": 1,
+        "position_world": 1,
+        "published_name": "Mayo Clinic - Rochester",
+        "city": "Rochester, MN",
+        "country": "US",
+        "years_awarded": [
+            2023,
+            2022,
+            2021,
+            2020,
+            2019
+        ],
+        "sales_contact_first_name": "Firstname2",
+        "sales_contact_last_name": "Lastname2",
+        "sales_contact_job_title": "Senior Key Account Manager",
+        "sales_contact_phone": "+49 40 444 555 666",
+        "sales_contact_email": "firstname2.lastname2@statista.com"
+    },
+    {
+        "ranking_id": "P-999999",
+        "ranking_name": {
+            "de": null,
+            "en": "World's Best Hospitals 2023",
+            "es": null,
+            "fr": null,
+            "it": null
+        },
+        "ranking_project_path": {
+            "de": null,
+            "en": "/en/healthcare/best-hospitals-world-2023",
+            "es": null,
+            "fr": null,
+            "it": null
+        },
+        "ranking_path": "/en/healthcare/best-hospitals-world-2023/ranking",
+        "ranking_logo_path": "/wp-content/uploads/best-hospitals-world-2023-logo.png",
+        "position_country": 51,
+        "position_world": null,
+        "published_name": "Brigham And Women's Faulkner Hospital",
+        "city": "Boston, MA",
+        "country": "US",
+        "years_awarded": [
+            2023,
+            2022,
+            2021,
+            2020
+        ],
+        "sales_contact_first_name": "Firstname1",
+        "sales_contact_last_name": "Lastname1",
+        "sales_contact_job_title": "Key Account Manager",
+        "sales_contact_phone": "+49 40 111 222 333",
+        "sales_contact_email": "firstname1.lastname1@statista.com"
+    },
+    {
+        "ranking_id": "P-999999",
+        "ranking_name": {
+            "de": null,
+            "en": "World's Best Hospitals 2023",
+            "es": null,
+            "fr": null,
+            "it": null
+        },
+        "ranking_project_path": {
+            "de": null,
+            "en": "/en/healthcare/best-hospitals-world-2023",
+            "es": null,
+            "fr": null,
+            "it": null
+        },
+        "ranking_path": "/en/healthcare/best-hospitals-world-2023/ranking",
+        "ranking_logo_path": "/wp-content/uploads/best-hospitals-world-2023-logo.png",
+        "position_country": 199,
+        "position_world": null,
+        "published_name": "St. Mary's Regional Medical Center",
+        "city": "Enid, OK",
+        "country": "US",
+        "years_awarded": [
+            2023,
+            2022,
+            2021
+        ],
+        "sales_contact_first_name": "Firstname3",
+        "sales_contact_last_name": "Lastname3",
+        "sales_contact_job_title": "Key Account Manager",
+        "sales_contact_phone": "+49 40 777 888 999",
+        "sales_contact_email": "firstname3.lastname3@statista.com"
+    }
+]
